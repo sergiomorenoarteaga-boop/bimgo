@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎯 Bingo de Imágenes - Amazon EU RME</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Amazon Ember', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #232F3E 0%, #37475A 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Header con logo */
+        .header {
+            background: white;
+            padding: 20px 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            height: 60px;
+            width: auto;
+        }
+
+        .titulo-principal {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .titulo-amazon {
+            color: #232F3E;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .subtitulo-rme {
+            color: #FF9900;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 2px;
+        }
+
+        .titulo-juego {
+            color: #232F3E;
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .contenedor-principal {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 20px;
+        }
+
+        @media (max-width: 1024px) {
+            .contenedor-principal {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+        
+        .contenedor-imagen {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .contenedor-historial {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: slideIn 0.5s ease-in;
+        }
+        
+        h1 {
+            color: #232F3E;
+            margin-bottom: 10px;
+            font-size: 32px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .contador {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            display: inline-block;
+        }
+
+        .progreso-container {
+            width: 100%;
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progreso-barra {
+            height: 25px;
+            background: linear-gradient(90deg, #FF9900 0%, #FFB84D 100%);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        #nombreImagen {
+            font-size: 28px;
+            color: #232F3E;
+            margin: 20px 0;
+            font-weight: bold;
+            min-height: 40px;
+            padding: 15px;
+            background: linear-gradient(135deg, #FF990022 0%, #FFB84D22 100%);
+            border-radius: 10px;
+            animation: pulse 2s infinite;
+        }
+        
+        #imagenAleatoria {
+            max-width: 100%;
+            max-height: 500px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+            animation: zoomIn 0.5s ease;
+        }
+
+        #imagenAleatoria:hover {
+            transform: scale(1.02);
+        }
+        
+        .botones-container {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 15px 35px;
+            font-size: 16px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-siguiente {
+            background: linear-gradient(135deg, #FF9900 0%, #FFB84D 100%);
+            color: white;
+        }
+
+        .btn-siguiente:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 153, 0, 0.4);
+        }
+
+        .btn-reset {
+            background: linear-gradient(135deg, #232F3E 0%, #37475A 100%);
+            color: white;
+        }
+
+        .btn-reset:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(35, 47, 62, 0.4);
+        }
+
+        button:active {
+            transform: translateY(-1px);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .historial-titulo {
+            color: #232F3E;
+            font-size: 24px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #FF9900;
+        }
+
+        .historial-lista {
+            list-style: none;
+        }
+
+        .historial-item {
+            padding: 12px;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #FF990011 0%, #FFB84D11 100%);
+            border-radius: 10px;
+            border-left: 4px solid #FF9900;
+            animation: slideInItem 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .historial-numero {
+            background: #FF9900;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .historial-nombre {
+            color: #232F3E;
+            font-weight: 500;
+            flex-grow: 1;
+        }
+
+        .mensaje-completo {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            font-size: 20px;
+            font-weight: bold;
+            animation: bounce 1s ease;
+        }
+
+        .error {
+            color: #f5576c;
+            font-size: 14px;
+            margin-top: 10px;
+            padding: 10px;
+            background: #ffe0e0;
+            border-radius: 8px;
+        }
+
+        /* Placeholder para el logo si no se carga */
+        .logo-placeholder {
+            background: linear-gradient(135deg, #FF9900 0%, #FFB84D 100%);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { 
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInItem {
+            from { 
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes zoomIn {
+            from { 
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to { 
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-20px); }
+            60% { transform: translateY(-10px); }
+        }
+
+        /* Scrollbar personalizado */
+        .contenedor-historial::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .contenedor-historial::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .contenedor-historial::-webkit-scrollbar-thumb {
+            background: #FF9900;
+            border-radius: 10px;
+        }
+
+        .contenedor-historial::-webkit-scrollbar-thumb:hover {
+            background: #FFB84D;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header con Logo -->
+    <div class="header">
+        <div class="logo-container">
+            <!-- OPCIÓN 1: Si tienes el archivo del logo localmente -->
+            <img src="amazon-rme-logo.png" alt="Amazon EU RME Logo" class="logo" id="logoImg" onerror="this.style.display='none'; document.getElementById('logoPlaceholder').style.display='flex';">
+            
+            <!-- OPCIÓN 2: Placeholder si no se carga el logo -->
+            <div class="logo-placeholder" id="logoPlaceholder" style="display: none;">
+                <span>📦 AMAZON</span>
+            </div>
+            
+            <div class="titulo-principal">
+                <div class="titulo-amazon">Amazon EU</div>
+                <div class="subtitulo-rme">RELIABILITY MAINTENANCE ENGINEERING</div>
+            </div>
+        </div>
+        
+        <div class="titulo-juego">
+            🎯 Bingo de Imágenes
+        </div>
+    </div>
+
+    <div class="contenedor-principal">
+        <!-- Panel principal con la imagen -->
+        <div class="contenedor-imagen">
+            <h1>🎲 Juego de Reconocimiento</h1>
+            
+            <div class="contador">
+                <span id="contadorMostradas">0</span> / <span id="contadorTotal">0</span> imágenes mostradas
+            </div>
+
+            <div class="progreso-container">
+                <div class="progreso-barra" id="progresoBarra" style="width: 0%">
+                    0%
+                </div>
+            </div>
+            
+            <div id="nombreImagen">Haz clic en "Siguiente Imagen" para comenzar</div>
+            
+            <img id="imagenAleatoria" src="" alt="Imagen aleatoria" style="display:none;">
+            
+            <div id="mensajeCompleto" style="display:none;" class="mensaje-completo">
+                🎉 ¡FELICIDADES! Has visto todas las imágenes 🎉
+            </div>
+            
+            <div id="mensajeError" class="error" style="display:none;"></div>
+            
+            <div class="botones-container">
+                <button class="btn-siguiente" onclick="mostrarImagenAleatoria()">
+                    🎲 Siguiente Imagen
+                </button>
+                <button class="btn-reset" onclick="resetearJuego()">
+                    🔄 Reiniciar Juego
+                </button>
+            </div>
+        </div>
+
+        <!-- Panel de historial -->
+        <div class="contenedor-historial">
+            <h2 class="historial-titulo">📋 Historial</h2>
+            <ul class="historial-lista" id="historialLista">
+                <li style="color: #999; text-align: center; padding: 20px;">
+                    Aún no hay imágenes mostradas
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Ruta base de la carpeta
+        const rutaBase = "";
+        
+        // Array con las imágenes
+        const imagenes = [
+            { nombre: "1MRA", archivo: "1MRA.jpg" },
+            { nombre: "ANDON", archivo: "andon.jpg" },
+            { nombre: "AROS_IB", archivo: "Aros_IB.jpg" },
+            { nombre: "BOMBAS", archivo: "Bombas PCI.jpg" },
+            { nombre: "CANDADOLOTOCONTRATAS", archivo: "CandadoLOTOcontratas.jpg" },
+            { nombre: "CANDADOLOTOTRANSICI", archivo: "CandadoLOTOtransici.jpg" },
+            { nombre: "CANDADOLOTO_AMEC", archivo: "CandadoLOTO_AMEC.jpg" },
+            { nombre: "CANDADO_RME", archivo: "CandadoRME.jpg" },
+            { nombre: "CASCO", archivo: "Casco.jpg" },
+            { nombre: "CHALECO", archivo: "Chaleco reflectante.jpg" },
+            { nombre: "COGNEX", archivo: "COGNEX.jpg" },
+            { nombre: "COMBILOCK", archivo: "Combilock.jpg" },
+            { nombre: "ECC", archivo: "ECC-EMBEDDED CONVEYOR CONTROLLER.jpg" },
+            { nombre: "ELECTRICISTA", archivo: "Electricista.jpg" },
+            { nombre: "ESPACIO", archivo: "Espacio confinado.jpg" },
+            { nombre: "GRUPO", archivo: "Grupo Electrogeno.jpg" },
+            { nombre: "LOTO", archivo: "Loto.jpg" },
+            { nombre: "LOTOBOX", archivo: "LOTObox.jpg" },
+            { nombre: "MEGAFONÍA_ALTAVOZ", archivo: "Megafonia_Altavoz esferico.jpg" },
+            { nombre: "MEGAFONÍA_CONSOLA", archivo: "Megafonia_Consola control.jpg" },
+            { nombre: "SENSOR_MONITRON", archivo: "monitron_1.jpg" },
+            { nombre: "PCI_CENTRAL", archivo: "PCI_Central.jpg" },
+            { nombre: "PCI_MCP", archivo: "PCI_MCP.jpg" },
+            { nombre: "PCI_PROPOINT", archivo: "PCI_Propoint.jpg" },
+            { nombre: "PCI_SIRENA", archivo: "PCI_Sirena con flash.jpg" },
+            { nombre: "PELIGRO_ATRAPAMIENTO", archivo: "Peligro de atrapamiento.jpg" },
+            { nombre: "PELIGRO_RIESGO_ELEC", archivo: "Peligro_riesgo electrico.jpg" },
+            { nombre: "PINZA_AMPERIMETRICA", archivo: "Pinza Amperimetrica.jpg" },
+            { nombre: "PINZALOTOGRUPO", archivo: "PinzaLOTOgrupo.jpg" },
+            { nombre: "PLC", archivo: "PLC.jpg" },
+            { nombre: "ROBOPACK", archivo: "Robopack.jpg" },
+            { nombre: "ROOFTOP_MAQCLIMA", archivo: "Rooftop_maqClima cubierta.jpg" },
+            { nombre: "SENSOR_HUMO", archivo: "Sensor de humo.jpg" },
+            { nombre: "SETA", archivo: "Seta de Emergencia.jpg" },
+            { nombre: "SOLDADOR", archivo: "Soldador.jpg" },
+            { nombre: "SPLINKER", archivo: "SPLINKER .jpg" },
+            { nombre: "TERMOGRAFÍA", archivo: "Termografia.jpg" },
+            { nombre: "CÁMARA_TERMOGRÁFICA", archivo: "termografica.jpg" },
+            { nombre: "TROQUELADORA", archivo: "Troqueladora de bandas.jpg" },
+            { nombre: "UESYSTEM_ULTRASONIDOS", archivo: "UEsystem_ultrasonidos.jpg" },
+            { nombre: "VARIADORNORD", archivo: "variadorNord.jpg" },
+        ];
+
+        // Array para guardar las imágenes ya mostradas
+        let imagenesRestantes = [...imagenes];
+        let historialMostradas = [];
+
+        // Inicializar contador total
+        document.getElementById('contadorTotal').textContent = imagenes.length;
+
+        function mostrarImagenAleatoria() {
+            // Verificar si quedan imágenes
+            if (imagenesRestantes.length === 0) {
+                mostrarMensajeCompleto();
+                return;
+            }
+
+            // Generar un índice aleatorio de las imágenes restantes
+            const indiceAleatorio = Math.floor(Math.random() * imagenesRestantes.length);
+            
+            // Obtener la imagen aleatoria
+            const imagenSeleccionada = imagenesRestantes[indiceAleatorio];
+            
+            // Remover la imagen del array de restantes
+            imagenesRestantes.splice(indiceAleatorio, 1);
+            
+            // Agregar al historial
+            historialMostradas.push(imagenSeleccionada);
+            
+            // Construir la ruta completa
+            const rutaCompleta = rutaBase + imagenSeleccionada.archivo;
+            
+            // Actualizar el nombre
+            document.getElementById('nombreImagen').textContent = imagenSeleccionada.nombre;
+            
+            // Actualizar la imagen
+            const imgElemento = document.getElementById('imagenAleatoria');
+            imgElemento.src = rutaCompleta;
+            imgElemento.style.display = 'block';
+            imgElemento.alt = imagenSeleccionada.nombre;
+            
+            // Limpiar mensajes
+            document.getElementById('mensajeError').style.display = 'none';
+            document.getElementById('mensajeCompleto').style.display = 'none';
+            
+            // Actualizar contador y barra de progreso
+            actualizarContador();
+            actualizarHistorial();
+            
+            // Manejar error si la imagen no carga
+            imgElemento.onerror = function() {
+                const errorDiv = document.getElementById('mensajeError');
+                errorDiv.textContent = '⚠️ Error al cargar la imagen. Verifica la ruta y el nombre del archivo.';
+                errorDiv.style.display = 'block';
+            };
+        }
+
+        function actualizarContador() {
+            const mostradas = historialMostradas.length;
+            const total = imagenes.length;
+            const porcentaje = Math.round((mostradas / total) * 100);
+            
+            document.getElementById('contadorMostradas').textContent = mostradas;
+            
+            const barra = document.getElementById('progresoBarra');
+            barra.style.width = porcentaje + '%';
+            barra.textContent = porcentaje + '%';
+        }
+
+        function actualizarHistorial() {
+            const lista = document.getElementById('historialLista');
+            lista.innerHTML = '';
+            
+            // Mostrar en orden inverso (más reciente primero)
+            for (let i = historialMostradas.length - 1; i >= 0; i--) {
+                const item = document.createElement('li');
+                item.className = 'historial-item';
+                item.innerHTML = `
+                    <div class="historial-numero">${historialMostradas.length - i}</div>
+                    <div class="historial-nombre">${historialMostradas[i].nombre}</div>
+                `;
+                lista.appendChild(item);
+            }
+        }
+
+        function mostrarMensajeCompleto() {
+            document.getElementById('mensajeCompleto').style.display = 'block';
+            document.getElementById('nombreImagen').textContent = '¡Juego completado!';
+        }
+
+        function resetearJuego() {
+            if (historialMostradas.length === 0) {
+                return;
+            }
+
+            if (confirm('¿Estás seguro de que quieres reiniciar el juego? Se borrará todo el historial.')) {
+                // Restaurar arrays
+                imagenesRestantes = [...imagenes];
+                historialMostradas = [];
+                
+                // Limpiar interfaz
+                document.getElementById('nombreImagen').textContent = 'Haz clic en "Siguiente Imagen" para comenzar';
+                document.getElementById('imagenAleatoria').style.display = 'none';
+                document.getElementById('mensajeCompleto').style.display = 'none';
+                document.getElementById('mensajeError').style.display = 'none';
+                
+                // Resetear contador
+                document.getElementById('contadorMostradas').textContent = '0';
+                document.getElementById('progresoBarra').style.width = '0%';
+                document.getElementById('progresoBarra').textContent = '0%';
+                
+                // Limpiar historial
+                document.getElementById('historialLista').innerHTML = `
+                    <li style="color: #999; text-align: center; padding: 20px;">
+                        Aún no hay imágenes mostradas
+                    </li>
+                `;
+            }
+        }
+
+        // Atajos de teclado
+        document.addEventListener('keydown', function(event) {
+            if (event.key === ' ' || event.key === 'Enter') {
+                event.preventDefault();
+                mostrarImagenAleatoria();
+            } else if (event.key === 'r' || event.key === 'R') {
+                resetearJuego();
+            }
+        });
+    </script>
+</body>
+</html>
